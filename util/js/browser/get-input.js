@@ -1,30 +1,23 @@
 /**
- * /**
  * Request Advent of Code puzzle input for use in browser console
  * Note: Must be used when on page on https://adventofcode.com due to same
  * origin policy
  *
  * Usage:
- * let input;
- * getInput('https://adventofcode.com/2018/day/1/input');
- * // wait for request to complete
- * // input will contain string of input file contents
+ * getInput().then((input) => { });
  *
  * @param  {string} url Input URL to request
+ * @return {Promise}  Promise returning input as string
  */
 function getInput(url) {
-  let request = new XMLHttpRequest();
-  request.open('GET', url, true);
-
-  request.onload = function() {
-    if (request.status >= 200 && request.status < 400) {
-      // Success!
-      var resp = request.responseText;
-      input = resp;
-    }
-  };
-
-  request.send();
+  return fetch(url)
+    .then((response) => {
+      if (response.ok) {
+        return response.text();
+      } else {
+        throw new Error("Input download failed", response);
+      }
+    });
 }
 
 /**
@@ -34,14 +27,11 @@ function getInput(url) {
  * origin policy
  *
  * Usage:
- * let input;
- * getInput(1);
- * // wait for request to complete
- * // input will contain string of input file contents
+ * getDailyInput().then((input) => { });
  *
  * @param  {number|string} day The day's input you're requesting
- * @return {[type]}     [description]
+ * @return {Promise}  Promise returning input as string
  */
 function getDailyInput(day) {
-  getInput(`https://adventofcode.com/2018/day/${day}/input`);
+  return getInput(`https://adventofcode.com/2018/day/${day}/input`);
 }
